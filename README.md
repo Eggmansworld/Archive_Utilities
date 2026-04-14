@@ -14,6 +14,7 @@ A multi-tab Python/tkinter desktop utility for archive extraction and compressio
 | 🗜 **ZIP Store Packer** | Wrap files in zero-compression ZIP containers for downstream recompression pipelines |
 
 ---
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/a0e4c975-7960-460d-a813-27a74651bb91" />
 
 ## Requirements
 
@@ -39,18 +40,14 @@ The application runs without these — affected features are disabled and flagge
 ## Usage
 
 ```
-python eggmans_archive_utility.py
+python Eggmans_Archive_Utilities.py
 ```
 
 No installer required.
 
 ---
 
-## Tab Reference
-
----
-
-### 📦 Extractor
+# 📦 Extractor
 
 Recursively scans a source folder for archives and extracts each one into its own named subfolder. Files from different archives never mix together in the same directory.
 
@@ -106,7 +103,7 @@ Enabling **Auto-extract nested archives** pushes discovered archives onto the ba
 
 ---
 
-### 🗜 ZIP Store Packer
+# 🗜 ZIP Store Packer
 
 Recursively scans a folder for files matching one or more extensions, wraps each file individually in a **ZIP_STORED** (zero compression) archive in-place, verifies the archive integrity, and deletes the original file.
 
@@ -211,6 +208,24 @@ SEVEN_ZIP = r"C:\Program Files\7-Zip-Zstandard\7z.exe"
 
 ---
 
-## License
+## Licensing
 
-MIT
+Original source code, scripts, tooling, and hand-authored documentation and
+metadata in this repository are licensed under the MIT License.
+
+Archived game data, binaries, firmware, media assets, and other third-party
+materials are **not** covered by the MIT License and remain the property of
+their respective copyright holders.
+
+See the `LICENSE` and `NOTICE` files for full details and scope clarification.
+
+---
+
+## CREDITS
+
+Created for the preservation community by Eggman, with Claude’s help turning ideas into code.
+
+If you improve the script, feel free to share your changes back with the community.
+
+*Made with ❤️ for the retro game preservation community.*
+---
