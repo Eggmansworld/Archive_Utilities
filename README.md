@@ -177,6 +177,24 @@ SEVEN_ZIP = r"C:\Program Files\7-Zip-Zstandard\7z.exe"
 
 ---
 
-## License
+## Licensing
 
-MIT
+Original source code, scripts, tooling, and hand-authored documentation and
+metadata in this repository are licensed under the MIT License.
+
+Archived game data, binaries, firmware, media assets, and other third-party
+materials are **not** covered by the MIT License and remain the property of
+their respective copyright holders.
+
+See the `LICENSE` and `NOTICE` files for full details and scope clarification.
+
+---
+
+## CREDITS
+
+Created for the preservation community by Eggman, with Claude’s help turning ideas into code.
+
+If you improve the script, feel free to share your changes back with the community.
+
+*Made with ❤️ for the retro game preservation community.*
+---
