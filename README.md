@@ -14,6 +14,7 @@ A multi-tab Python/tkinter desktop utility for archive extraction and compressio
 | 🗜 **ZIP Store Packer** | Wrap files in zero-compression ZIP containers for downstream recompression pipelines |
 
 ---
+<img width="1536" height="1024" alt="Eggmans_Archive_Utilities" src="https://github.com/user-attachments/assets/d6aeba32-09cc-43a0-8a62-ad0fd08cceed" />
 
 ## Requirements
 
