@@ -14,7 +14,6 @@ A multi-tab Python/tkinter desktop utility for archive extraction and compressio
 | 🗜 **ZIP Store Packer** | Wrap files in zero-compression ZIP containers for downstream recompression pipelines |
 
 ---
-<img width="1536" height="1024" alt="Eggmans_Archive_Utilities" src="https://github.com/user-attachments/assets/d6aeba32-09cc-43a0-8a62-ad0fd08cceed" />
 
 ## Requirements
 
@@ -109,9 +108,31 @@ Enabling **Auto-extract nested archives** pushes discovered archives onto the ba
 
 ### 🗜 ZIP Store Packer
 
-Wraps files in uncompressed ZIP containers using `ZIP_STORED` (zero compression). Intended as the first stage of a two-pass archival pipeline where a separate tool applies deterministic recompression — e.g. ZSTD — to the zip wrappers.
+Recursively scans a folder for files matching one or more extensions, wraps each file individually in a **ZIP_STORED** (zero compression) archive in-place, verifies the archive integrity, and deletes the original file.
+
+Designed for data preservation and archival workflows where files need to be containerized in a neutral zip wrapper before being passed to a downstream compression tool — such as a deterministic recompressor like ZipTorrent or RomVault's ZStandard (RVZSTD).
 
 **Target folder** — Drop or browse. Processing is recursive by default.
+
+#### Why not just use 7-Zip or WinRAR?
+
+The core problem is **one archive per file**. Both 7-Zip and WinRAR are designed to collect files into an archive, not to wrap each file individually in its own archive and leave it in place. That workflow simply doesn't exist in their interfaces.
+
+| Feature | ZIP Store Packer | 7-Zip GUI | 7-Zip CLI | WinRAR GUI |
+|---|:---:|:---:|:---:|:---:|
+| ZIP STORE (no compression) | ✅ | ✅ | ✅ | ✅ |
+| Recursive folder scan | ✅ | ✅ | ✅ | ✅ |
+| Filter by file extension | ✅ | ❌ | ⚠️¹ | ❌ |
+| One ZIP per file, in-place | ✅ | ❌ | ⚠️¹ | ❌ |
+| Verify archive before delete | ✅ | ❌ | ⚠️¹ | ❌ |
+| Delete original after verify | ✅ | ❌ | ⚠️¹ | ✅² |
+| No scripting required | ✅ | ✅ | ❌ | ✅ |
+| Multiple extensions in one run | ✅ | ❌ | ❌ | ❌ |
+
+> ¹ Possible via a PowerShell `foreach` loop calling `7z.exe` per file — but that's writing a script to replicate what this tool already does.
+> ² WinRAR can delete after archiving, but the delete is not conditional on a separate integrity test.
+
+This workflow — recursive, filtered, one-zip-per-file, in-place, verify-before-delete — falls squarely in the gap between what GUI archivers do and what a one-line command can do. Field-tested on folders containing tens of thousands of subfolders with over 200,000 files in a single operation.
 
 #### Extensions
 
@@ -126,20 +147,32 @@ File extensions to target are managed as removable pill tags. Type one or more i
 
 Click **✕** on any pill to remove it. `.exe` is loaded by default.
 
-#### Processing logic
+#### How it works
 
+```
 For each matching file:
+  ├── Create  →  filename.zip  (ZIP_STORED, allowZip64)
+  ├── Verify  →  testzip() + file size cross-check
+  ├── Delete  →  original file removed only if verify passes
+  └── Log     →  OK / SKIP / FAIL with file size reported
+```
 
-1. Create `filename.zip` alongside the source using `ZIP_STORED` / `allowZip64`
-2. Verify with `testzip()` and a file-size cross-check
-3. Delete the original only if verification passes
-4. If creation or verification fails, the incomplete zip is removed and the original is left untouched
+If creation or verification fails for any reason, the incomplete zip is deleted and the original file is left untouched.
 
 #### Options
 
 - **Recursive** — scan subdirectories (default on)
 - **Verify before delete** — run integrity check before removing original (default on)
-- **Skip if .zip already exists** — avoids reprocessing files already wrapped (default on)
+- **Skip if .zip already exists** — avoids reprocessing files already wrapped; the original is left untouched (default on)
+
+#### Intended workflow
+
+ZIP Store Packer is the first stage of a two-pass archival pipeline:
+
+1. **ZIP Store Packer** — wraps files in uncompressed ZIP containers *(this tool)*
+2. **Downstream recompressor** — applies deterministic ZSTD or other compression to the zip files
+
+Keeping the two stages separate allows compression parameters to be changed or re-applied at any time without needing to re-wrap the original files.
 
 ---
 
@@ -178,24 +211,6 @@ SEVEN_ZIP = r"C:\Program Files\7-Zip-Zstandard\7z.exe"
 
 ---
 
-## Licensing
+## License
 
-Original source code, scripts, tooling, and hand-authored documentation and
-metadata in this repository are licensed under the MIT License.
-
-Archived game data, binaries, firmware, media assets, and other third-party
-materials are **not** covered by the MIT License and remain the property of
-their respective copyright holders.
-
-See the `LICENSE` and `NOTICE` files for full details and scope clarification.
-
----
-
-## CREDITS
-
-Created for the preservation community by Eggman, with Claude’s help turning ideas into code.
-
-If you improve the script, feel free to share your changes back with the community.
-
-*Made with ❤️ for the retro game preservation community.*
----
+MIT
